@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+set -euo pipefail
+# Preview the dynamic Traefik config generated from environment
+DYNFILE="/tmp/traefik_dynamic.yml"
+cat > "$DYNFILE" <<'YAML'
+http:
+  middlewares:
+    auth:
+      basicAuth:
+        users:
+          - "admin:$$apr1$$dummyhash"
+  routers:
+    websecure:
+      rule: "Host(`example.com`)"
+      service: web
+      entryPoints:
+        - websecure
+YAML
+
+echo "Dynamic Traefik config previewed at $DYNFILE"
+ls -l "$DYNFILE"
+cat "$DYNFILE"
